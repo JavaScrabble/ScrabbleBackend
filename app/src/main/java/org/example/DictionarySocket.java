@@ -13,10 +13,17 @@ public class DictionarySocket {
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
 
-        while (true) {
-            Socket clientSocket = serverSocket.accept(); // waiting for the client
-            new Thread(new ClientHandler(clientSocket)).start();
-        }
+        new Thread(() -> {
+            while (true) {
+                Socket clientSocket = null; // waiting for the client
+                try {
+                    clientSocket = serverSocket.accept();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                new Thread(new ClientHandler(clientSocket)).start();
+            }
+        }).start();
     }
 
     static class ClientHandler implements Runnable {
