@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.chat.ChatServer;
+import org.example.dictionary.DictionarySocket;
+
 import java.io.IOException;
 
 
