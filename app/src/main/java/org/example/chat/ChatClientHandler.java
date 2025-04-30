@@ -25,7 +25,7 @@ public class ChatClientHandler extends AbstractClientHandler {
     }
 
     @Override
-    public String call() {
+    public void run() {
         while(!socket.isClosed()) {
             try{
                 String text = in.readUTF();
@@ -66,6 +66,5 @@ public class ChatClientHandler extends AbstractClientHandler {
 
         clientsInRoom.remove(this); // Effectively logout
         System.out.printf("SERVER INFO[session with %s closed]%n", nickname);
-        return null;
     }
 }

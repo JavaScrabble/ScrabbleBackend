@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class AbstractClientHandler implements Callable<String> {
+public abstract class AbstractClientHandler implements Runnable {
     protected static ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
     protected final Socket socket;
