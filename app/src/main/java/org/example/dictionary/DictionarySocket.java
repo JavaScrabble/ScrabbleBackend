@@ -6,10 +6,9 @@ import java.net.Socket;
 
 public class DictionarySocket {
 
-    public static void initialize() throws IOException {
-        int port = 8082;
+    public static void initialize(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server started on port " + port);
+        System.out.println("Server started on port: " + port);
 
         new Thread(() -> {
             while (true) {
