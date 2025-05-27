@@ -2,6 +2,10 @@ package org.example.scrabble;
 
 public class Board {
     public static final int SIZE = 15;
+
+    /**
+    * First 8 rows, after that it's mirrored
+     */
     public static final String[] LAYOUT = {
             "3W,N,N,2L,N,N,N,3W,N,N,N,2L,N,N,3W",
             "N,2W,N,N,N,3L,N,N,N,3L,N,N,N,2W,N",

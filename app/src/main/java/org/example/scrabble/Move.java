@@ -10,4 +10,5 @@ public class Move {
     Map<Integer, Character> tilesFromRack; // Position → Letter placed
 
     // constructor
+
 }

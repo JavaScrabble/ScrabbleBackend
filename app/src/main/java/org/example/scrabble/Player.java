@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Player {
     private String name;
-    private List<Character> rack = new ArrayList<>();
+    private List<Tile> rack = new ArrayList<>();
     private int score;
     private boolean isTurn;
 
