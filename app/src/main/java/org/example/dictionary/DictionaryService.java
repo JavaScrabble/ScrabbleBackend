@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class DictionaryService {
 
-    public boolean doesWordExist(String word) {
+    public static boolean doesWordExist(String word) {
         try {
             URL url = new URL("https://api.dictionaryapi.dev/api/v2/entries/en/" + word);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

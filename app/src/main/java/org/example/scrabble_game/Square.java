@@ -1,4 +1,4 @@
-package org.example.scrabble;
+package org.example.scrabble_game;
 
 public class Square {
     private final Multiplier multiplier;
@@ -61,6 +61,18 @@ public class Square {
     */
     public boolean isEmpty() {
         return tile == null;
+    }
+
+    /**
+     * Check if Square of given index exists
+     *
+     * @param col -- int between 0 and SIZE-1
+     * @param row -- int between 0 and SIZE-1
+     * @return {@code true} if specified square index is valid
+     */
+    public static boolean doesExist(int col, int row) {
+        return col >= 0 && col < Board.SIZE &&
+                row >= 0 && row < Board.SIZE;
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.example.scrabble;
+package org.example.scrabble_game;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class GameEngine {
         this.gameOver = false;
 
         for (Player p : players) {
-            p.drawTiles(tileBag, 7);
+            p.getRack().refillBag();
         }
     }
 

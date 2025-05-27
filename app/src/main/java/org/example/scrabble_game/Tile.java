@@ -1,4 +1,4 @@
-package org.example.scrabble;
+package org.example.scrabble_game;
 
 public class Tile {
     /*Kinda of tiles ("-" represents the blank tile) grouped by their shared amount of points and amount */
