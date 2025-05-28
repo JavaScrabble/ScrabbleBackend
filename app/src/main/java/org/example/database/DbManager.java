@@ -2,17 +2,17 @@ package org.example.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DbManager {
+        private static String baseUrl = "jdbc:mysql://localhost:3306/";
+        private static String dbName = "scrabble";
+        private static String fullUrl = baseUrl + dbName;
+        private static String user = "root";
+        private static String password = "";
+
     public static void dbInit() {
-        String baseUrl = "jdbc:mysql://localhost:3306/";
-        String dbName = "scrabble";
-        String fullUrl = baseUrl + dbName;
-        String user = "root";
-        String password = "";
 
         // tworzenie bazy danych jeśli nie istnieje
         try (Connection conn = DriverManager.getConnection(baseUrl, user, password)) {
@@ -35,7 +35,8 @@ public class DbManager {
             String createTable = """
                     CREATE TABLE IF NOT EXISTS users (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        name VARCHAR(100) NOT NULL
+                        nick VARCHAR(100) NOT NULL,
+                        password VARCHAR(100) NOT NULL
                     );
                     """;
 
@@ -43,16 +44,14 @@ public class DbManager {
                 stmt.execute(createTable);
             }
 
-            // INSERT
-            String insertSql = "INSERT INTO users (name) VALUES (?)";
-            try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                pstmt.setString(1, "Jan Kowalski");
-                pstmt.executeUpdate();
-                System.out.println("Dodano użytkownika!");
-            }
-
         } catch (SQLException e) {
             System.err.println("Błąd podczas pracy z bazą danych:");
+            e.printStackTrace();
+        }
+
+        try{
+            DbController.startServer();
+        } catch(Exception e){
             e.printStackTrace();
         }
     }
