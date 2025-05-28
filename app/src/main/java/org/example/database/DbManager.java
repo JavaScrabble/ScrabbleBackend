@@ -6,17 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DbManager {
-        private static String baseUrl = "jdbc:mysql://localhost:3306/";
-        private static String dbName = "scrabble";
-        private static String fullUrl = baseUrl + dbName;
-        private static String user = "root";
-        private static String password = "";
 
     public static void dbInit() {
-
-        // tworzenie bazy danych jeśli nie istnieje
-        try (Connection conn = DriverManager.getConnection(baseUrl, user, password)) {
-            String createDb = "CREATE DATABASE IF NOT EXISTS " + dbName;
+        // Tworzenie bazy danych jeśli nie istnieje
+        try (Connection conn = DriverManager.getConnection(DbConfig.BASE_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
+            String createDb = "CREATE DATABASE IF NOT EXISTS " + DbConfig.DB_NAME;
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate(createDb);
                 System.out.println("Baza danych została utworzona (lub już istnieje).");
@@ -27,11 +21,10 @@ public class DbManager {
             return;
         }
 
-        // połączenie z istniejącą bazą danych
-        try (Connection conn = DriverManager.getConnection(fullUrl, user, password)) {
+        // Połączenie z istniejącą bazą danych
+        try (Connection conn = DriverManager.getConnection(DbConfig.DB_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
             System.out.println("Połączono z bazą danych!");
 
-            // Tworzenie tabeli
             String createTable = """
                     CREATE TABLE IF NOT EXISTS users (
                         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,9 +42,9 @@ public class DbManager {
             e.printStackTrace();
         }
 
-        try{
+        try {
             DbController.startServer();
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

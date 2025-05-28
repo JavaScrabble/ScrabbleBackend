@@ -15,12 +15,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
 public class DbController {
-
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/scrabble";
-    private static final String DB_USER = "root";
-    private static final String DB_PASS = "";
 
     public static void startServer() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
@@ -57,7 +52,7 @@ public class DbController {
                 return;
             }
 
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+            try (Connection conn = DriverManager.getConnection(DbConfig.DB_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
                 String sql = "INSERT INTO users (nick, password) VALUES (?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, nick);
