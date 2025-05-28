@@ -27,8 +27,7 @@ public class DbManager {
 
             String createTable = """
                     CREATE TABLE IF NOT EXISTS users (
-                        id INT AUTO_INCREMENT PRIMARY KEY,
-                        nick VARCHAR(100) NOT NULL,
+                        nick VARCHAR(100) PRIMARY KEY,
                         password VARCHAR(100) NOT NULL
                     );
                     """;

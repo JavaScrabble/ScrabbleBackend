@@ -58,8 +58,15 @@ public class DbController {
                     stmt.setString(1, nick);
                     stmt.setString(2, password);
                     stmt.executeUpdate();
+                    sendResponse(exchange, 200, "Użytkownik dodany");
+                } catch (SQLException e) {
+                    if (e.getSQLState().startsWith("23")) { // integrity constraint violation
+                        sendResponse(exchange, 409, "Gracz o takim nicku juz istnieje");
+                    } else {
+                        throw e;
+                    }
                 }
-                sendResponse(exchange, 200, "Użytkownik dodany");
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 sendResponse(exchange, 500, "Błąd serwera: " + e.getMessage());
