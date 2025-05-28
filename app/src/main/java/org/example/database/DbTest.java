@@ -8,15 +8,30 @@ import java.sql.Statement;
 
 public class DbTest {
     public static void testdb() {
-        // 👇 Zmień dane dostępowe do bazy:
-        String url = "jdbc:mysql://localhost:3306/testdb"; // testdb = Twoja baza
+        String baseUrl = "jdbc:mysql://localhost:3306/";
+        String dbName = "testdb";
+        String fullUrl = baseUrl + dbName;
         String user = "root";
         String password = "";
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+        // tworzenie bazy danych jeśli nie istnieje
+        try (Connection conn = DriverManager.getConnection(baseUrl, user, password)) {
+            String createDb = "CREATE DATABASE IF NOT EXISTS " + dbName;
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate(createDb);
+                System.out.println("Baza danych została utworzona (lub już istnieje).");
+            }
+        } catch (SQLException e) {
+            System.err.println("Błąd podczas tworzenia bazy danych:");
+            e.printStackTrace();
+            return;
+        }
+
+        // połączenie z istniejącą bazą danych
+        try (Connection conn = DriverManager.getConnection(fullUrl, user, password)) {
             System.out.println("Połączono z bazą danych!");
 
-            // 1. Tworzenie tabeli (jeśli nie istnieje)
+            // Tworzenie tabeli
             String createTable = """
                     CREATE TABLE IF NOT EXISTS users (
                         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -28,7 +43,7 @@ public class DbTest {
                 stmt.execute(createTable);
             }
 
-            // 2. INSERT - dodawanie danych
+            // INSERT
             String insertSql = "INSERT INTO users (name) VALUES (?)";
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, "Jan Kowalski");
@@ -37,8 +52,8 @@ public class DbTest {
             }
 
         } catch (SQLException e) {
+            System.err.println("Błąd podczas pracy z bazą danych:");
             e.printStackTrace();
         }
     }
 }
-
