@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DbTest {
-    public static void testdb() {
+public class DbManager {
+    public static void dbInit() {
         String baseUrl = "jdbc:mysql://localhost:3306/";
-        String dbName = "testdb";
+        String dbName = "scrabble";
         String fullUrl = baseUrl + dbName;
         String user = "root";
         String password = "";
