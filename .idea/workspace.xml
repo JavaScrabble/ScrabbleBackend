@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="94a274a8-e80f-4e25-84c6-49cf791608a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/database/DbController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/database/DbController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/database/DbManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/database/DbManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
