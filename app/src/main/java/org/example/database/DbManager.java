@@ -25,16 +25,29 @@ public class DbManager {
         try (Connection conn = DriverManager.getConnection(DbConfig.DB_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
             System.out.println("Połączono z bazą danych!");
 
-            String createTable = """
-                    CREATE TABLE IF NOT EXISTS users (
-                        nick VARCHAR(100) PRIMARY KEY,
-                        password VARCHAR(100) NOT NULL
-                    );
-                    """;
+            String createUsersTable = """
+                CREATE TABLE IF NOT EXISTS users (
+                    nick VARCHAR(20) PRIMARY KEY,
+                    password VARCHAR(30) NOT NULL
+                );
+            """;
+
+            String createRecordsTable = """
+                CREATE TABLE IF NOT EXISTS scores (
+                    gameID INT NOT NULL,
+                    nick VARCHAR(20) NOT NULL,
+                    score INT NOT NULL,
+                    date DATE NOT NULL,
+                    PRIMARY KEY (gameID, nick),
+                    CONSTRAINT fk_nick FOREIGN KEY (nick) REFERENCES users(nick)
+                );
+            """;
 
             try (Statement stmt = conn.createStatement()) {
-                stmt.execute(createTable);
+                stmt.execute(createUsersTable);
+                stmt.execute(createRecordsTable);
             }
+
 
         } catch (SQLException e) {
             System.err.println("Błąd podczas pracy z bazą danych:");
