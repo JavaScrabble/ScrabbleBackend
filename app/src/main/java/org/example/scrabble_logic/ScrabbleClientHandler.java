@@ -45,33 +45,6 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                 throw new RuntimeException(e);
             }
         }
-        while(!socket.isClosed()) {
-            try{
-                String text = in.readUTF();
-                System.out.printf("SERVER LOG[%s: %s]%n", nickname, text);
-
-                playersInRoom.forEach(peer -> {
-                    if(!peer.getNickname().equals(nickname)) {
-                        try {
-                            peer.sendToClient(new ChatMessage(nickname, text));
-                        }
-                        // Catches if impossible to forward the message to another client
-                        catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-            }
-            // Catches stuff like disconnects etc.
-            catch(SocketException e){
-                System.out.printf("SERVER WARNING[%s, %s]%n", nickname, e.getMessage());
-                break;
-            }
-            catch(IOException e){
-                System.out.printf("SERVER ERROR[%s, %s]%n", nickname, e.getMessage());
-                break;
-            }
-        }
 
         // Clean up the connections
         try{
