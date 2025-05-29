@@ -1,0 +1,329 @@
+package org.example.scrabble_game;
+
+import org.example.dictionary.DictionaryService;
+
+public class Board {
+    public static final int SIZE = 15;
+
+    /**
+    * First 8 rows, after that it's mirrored
+     */
+    public static final String[] LAYOUT = {
+            "3W,N,N,2L,N,N,N,3W,N,N,N,2L,N,N,3W",
+            "N,2W,N,N,N,3L,N,N,N,3L,N,N,N,2W,N",
+            "N,N,2W,N,N,N,2L,N,2L,N,N,N,2W,N,N",
+            "2L,N,N,2W,N,N,N,2L,N,N,N,2W,N,N,2L",
+            "N,N,N,N,2W,N,N,N,N,N,2W,N,N,N,N",
+            "N,3L,N,N,N,3L,N,N,N,3L,N,N,N,3L,N",
+            "N,N,2L,N,N,N,2L,N,2L,N,N,N,2L,N,N",
+            "3W,N,N,2L,N,N,N,*,N,N,N,2L,N,N,3W",
+    };
+    private Square[][] board = new Square[SIZE][SIZE];
+    private boolean isFirstMove;
+
+    /**
+     * Creates a new empty Scrabble board
+     */
+    public Board() {
+        board = new Square[SIZE][SIZE];
+        setFirstMove(true);
+        // Initialise multiplier squares on board
+        String[] row;
+        for (int i = 0; i < SIZE; i++) {
+            row = (i <= 7) ? LAYOUT[i].split(",") : LAYOUT[SIZE - i - 1].split(",");
+            for (int j = 0; j < SIZE; j++) {
+                switch (row[j]) {
+                    case "*":
+                        board[i][j] = new Square(Square.Multiplier.CENTRE);
+                        break;
+                    case "2L":
+                        board[i][j] = new Square(Square.Multiplier.DOUBLE_L);
+                        break;
+                    case "3L":
+                        board[i][j] = new Square(Square.Multiplier.TRIPLE_L);
+                        break;
+                    case "2W":
+                        board[i][j] = new Square(Square.Multiplier.DOUBLE_W);
+                        break;
+                    case "3W":
+                        board[i][j] = new Square(Square.Multiplier.TRIPLE_W);
+                        break;
+                    default: // N
+                        board[i][j] = new Square(Square.Multiplier.NORMAL);
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+    * Sets isFirstMove to given value
+     */
+    private void setFirstMove(boolean value) {
+        isFirstMove = value;
+    }
+
+    /**
+     * Returns board
+     */
+    public Square[][] getBoard() {
+        return board;
+    }
+
+    /**
+     * Check if board has no tiles
+     *
+     * @return {@code true} if board is empty
+     */
+    public boolean isEmpty() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (!board[i][j].isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+    * Places tile on given square
+     */
+    public void placeTile(char column, int row, Tile tile) {
+        board[row - 1][column - 'A'].setTile(tile);
+        //Scoring.LAST_COVERED_INDICES.add(new Index(row - 1, column - 'A'));
+    }
+
+    public String getHorizontalWord(int row, int startColumn, int endColumn) {
+        StringBuilder word = new StringBuilder();
+        for (int i = startColumn; i <= endColumn; i++) {
+            word.append(board[row][i].getTile().getLetter());
+        }
+        return word.toString();
+    }
+
+    public String getVerticalWord(int column, int startRow, int endRow) {
+        StringBuilder word = new StringBuilder();
+        for (int i = startRow; i <= endRow; i++) {
+            word.append(board[i][column].getTile().getLetter());
+        }
+        return word.toString();
+    }
+
+    public void applyMove(Move move, Rack rack) throws IllegalArgumentException {
+        if (!isValidMove(move, rack)) {
+            throw new IllegalArgumentException("Invalid move placement");
+        }
+        //Scoring.LAST_COVERED_INDICES.clear();
+        setFirstMove(false);
+        int row, column;
+        for (int i = 0; i < move.wordLength(); i++) {
+            char ch = move.wordCharAt(i);
+            if (move.isHorizontal()) {
+                // Column index increases for word placed horizontally
+                column = move.getStartCol() + i;
+                row = move.getStartRow();
+            } else {
+                // Row index increases for word placed vertically
+                row = move.getStartRow() + i;
+                column = move.getStartCol();
+            }
+            // Ignore filled squares, place tiles on the remaining squares
+            if (board[row][column].isEmpty()) {
+                if (rack.contains(ch)) {
+                    // Place tile on the board and remove it from the frame
+                    placeTile((char) (column + 'A'), row + 1, rack.getTile(ch));
+                    rack.remove(ch);
+                } else {
+                    // Convert blank tile to a given letter if letter is not in the frame
+                    Tile blankTile = new Tile(ch, 0);
+                    placeTile((char) (column + 'A'), row + 1, blankTile);
+                    rack.remove('-');
+                }
+            }
+        }
+    }
+
+    /*
+    * Check if move placement is valid
+     */
+    public boolean isValidMove(Move move, Rack rack) {
+        // Check position, alignment, connectivity, tile availability
+        if (!Square.doesExist(move.getStartCol(), move.getStartRow()) ||
+                !(move.isHorizontal() || move.isVertical()) ||
+                move.wordLength() < 2 || !move.wordIsAlphaString() ||
+                rack == null) {
+            return false;
+        }
+        // Checks if word length exceeds the size of the board
+        if (isOverflowed(move)) {
+            // komunikat np. Word goes beyond the board;
+            return false;
+        }
+        // Checks words formed
+        /*if (doesWordConflict(word)) {
+            Scrabble.printToOutput("> Word conflicts with existing word on board!");
+            return false;
+        }*/
+
+        // Checks if rack contains the required tiles for the move
+        if (!doesRackHaveTiles(move, rack)) {
+            // komunikat
+            return false;
+        }
+        // Checks whether the placement uses at least one letter from frame
+        if (!isRackUsed(move, rack)) {
+            // komunikat
+            return false;
+        }
+
+        // If first move, checks if it covers the centre square
+        if (isFirstMove) {
+            boolean isCentreCovered = doesMoveCoverCentre(move);
+            if (!isCentreCovered) {
+                // Komunikat
+            }
+            return isCentreCovered;
+        } else {
+            // If not first move, checks if word connects with an existing word on board
+            return isWordJoined(move);
+        }
+    }
+
+    // Checks if a word placement goes out of the board
+    private boolean isOverflowed(Move move) {
+        if (move.isHorizontal()) {
+            return (move.getStartCol() + move.wordLength() - 1) >= SIZE;
+        } else {
+            return (move.getStartRow() + move.wordLength() - 1) >= SIZE;
+        }
+    }
+
+    // Checks if the frame contains the letters necessary for word placement
+    private boolean doesRackHaveTiles(Move move, Rack rack) {
+        StringBuilder sb = new StringBuilder();
+        for (Tile t : rack.getRack()) {
+            sb.append(t.getLetter());
+        }
+        String tilesInFrame = sb.toString();
+        int row, column;
+        for (int i = 0; i < move.wordLength(); i++) {
+            if (move.isHorizontal()) {
+                // Column index increases for word placed horizontally
+                column = move.getStartCol() + i;
+                row = move.getStartRow();
+            } else {
+                // Row index increases for word placed vertically
+                column = move.getStartCol();
+                row = move.getStartRow()+1;
+            }
+            String letter = Character.toString(move.wordCharAt(i));
+            if (board[row][column].isEmpty()) {
+                if (tilesInFrame.contains(letter)) {
+                    // Check for the specified letter from the frame
+                    tilesInFrame = tilesInFrame.replaceFirst(letter, "");
+                } else if (tilesInFrame.contains("-")) {
+                    // Check for any blank characters from the frame
+                    tilesInFrame = tilesInFrame.replaceFirst("-", "");
+                } else {
+                    // Frame does not contain letter needed
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Checks that at least one letter from the frame is used
+    private boolean isRackUsed(Move move, Rack rack) {
+        int row, column;
+        for (int i = 0; i < move.wordLength(); i++) {
+            if (move.isHorizontal()) {
+                // Column index increases for word placed horizontally
+                column = move.getStartCol() + i;
+                row = move.getStartRow();
+            } else {
+                // Row index increases for word placed vertically
+                column = move.getStartCol();
+                row = move.getStartRow()+1;
+            }
+            char letter = move.wordCharAt(i);
+            // If square is empty, check if frame contains the required letter or a blank tile
+            if (board[row][column].isEmpty()) {
+                if (rack.contains(letter) || rack.contains('-')) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Checks if the word to be placed covers the centre square H8 (aka 7, 7)
+    private boolean doesMoveCoverCentre(Move move) {
+        int row = move.getStartRow();
+        int column = move.getStartCol();
+        if (move.isHorizontal()) {
+            return row == SIZE / 2 && column <= SIZE / 2 &&
+                    column + move.wordLength() - 1 >= SIZE / 2;
+        } else {
+            return column == SIZE / 2 && row <= SIZE / 2 &&
+                    row + move.wordLength() - 1 >= SIZE / 2;
+        }
+    }
+
+    // Checks if a word placement connects with another existing word on the board
+    private boolean isWordJoined(Move move) {
+        int row = move.getStartRow();
+        int column = move.getStartCol();
+        if (move.isHorizontal()) {
+            for (int i = 0; i < move.wordLength(); i++) {
+                // Check top
+                if (Square.doesExist(column + i, row - 1)) {
+                    if (!board[row - 1][column + i].isEmpty()) {
+                        return true;
+                    }
+                }
+                // Check bottom
+                if (Square.doesExist(column + i, row + 1)) {
+                    if (!board[row + 1][column + i].isEmpty()) {
+                        return true;
+                    }
+                }
+                // Check if the word contains tiles already on the board
+                if (Square.doesExist(column + i, row)) {
+                    if (!board[row][column + i].isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < move.wordLength(); i++) {
+                // Check left
+                if (Square.doesExist(column - 1, row + i)) {
+                    if (!board[row + i][column - 1].isEmpty()) {
+                        return true;
+                    }
+                }
+                // Check right
+                if (Square.doesExist(column + 1, row + i)) {
+                    if (!board[row + i][column + 1].isEmpty()) {
+                        return true;
+                    }
+                }
+                // Check if the word contains letter already on the board
+                if (Square.doesExist(column, row + i)) {
+                    if (!board[row + i][column].isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Komunikat
+        return false;
+    }
+
+    private boolean doesWordExist(Move move) {
+        return org.example.dictionary.DictionaryService.doesWordExist(move.getWord());
+    }
+}
