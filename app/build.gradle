@@ -34,6 +34,7 @@ java {
 
 dependencies {
     implementation libs.guava
+    implementation 'org.json:json:20220924'
 
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
