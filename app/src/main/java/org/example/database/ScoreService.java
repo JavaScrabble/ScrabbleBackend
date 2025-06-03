@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
 public class ScoreService {
-    static class InsertRecordHandler extends DbUtils implements HttpHandler {
+     class InsertRecordHandler extends DbUtils implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
@@ -49,23 +49,23 @@ public class ScoreService {
                     sendResponse(exchange, 200, "Rekord zapisany");
                 } catch (SQLException e) {
                     if (e.getSQLState().startsWith("23")) {
-                        sendResponse(exchange, 409, "Rekord z tym idGry i nickiem już istnieje");
+                        sendResponse(exchange, 409, "Rekord z tym idGry i nickiem juz istnieje");
                     } else {
                         throw e;
                     }
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                sendResponse(exchange, 500, "Błąd serwera: " + e.getMessage());
+                sendResponse(exchange, 500, "Blad serwera: " + e.getMessage());
             }
         }
     }
 
-    static class GetBestRecordsHandler extends DbUtils implements HttpHandler {
+    class GetBestRecordsHandler extends DbUtils implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-                exchange.sendResponseHeaders(405, -1); // Method Not Allowed
+                exchange.sendResponseHeaders(405, -1);
                 return;
             }
 
@@ -95,7 +95,7 @@ public class ScoreService {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                sendResponse(exchange, 500, "Błąd serwera: " + e.getMessage());
+                sendResponse(exchange, 500, "Blad serwera: " + e.getMessage());
             }
         }
     }
