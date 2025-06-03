@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
 public class UserService {
-    static class RegisterHandler extends DbUtils implements HttpHandler {
+    class RegisterHandler extends DbUtils implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
@@ -59,7 +59,7 @@ public class UserService {
         }
     }
 
-    static class LoginHandler extends DbUtils implements HttpHandler {
+    class LoginHandler extends DbUtils implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {

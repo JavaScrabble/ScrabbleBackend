@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
 public class ScoreService {
-    static class InsertRecordHandler extends DbUtils implements HttpHandler {
+     class InsertRecordHandler extends DbUtils implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
@@ -61,7 +61,7 @@ public class ScoreService {
         }
     }
 
-    static class GetBestRecordsHandler extends DbUtils implements HttpHandler {
+    class GetBestRecordsHandler extends DbUtils implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
