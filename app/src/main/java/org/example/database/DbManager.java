@@ -8,22 +8,22 @@ import java.sql.Statement;
 public class DbManager {
 
     public static void dbInit() {
-        // Tworzenie bazy danych jeśli nie istnieje
+        // tworzenie bazy danych jeśli nie istnieje
         try (Connection conn = DriverManager.getConnection(DbConfig.BASE_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
             String createDb = "CREATE DATABASE IF NOT EXISTS " + DbConfig.DB_NAME;
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate(createDb);
-                System.out.println("Baza danych została utworzona (lub już istnieje).");
+                System.out.println("Baza danych zostala utworzona (lub juz istnieje).");
             }
         } catch (SQLException e) {
-            System.err.println("Błąd podczas tworzenia bazy danych:");
+            System.err.println("Blad podczas tworzenia bazy danych:");
             e.printStackTrace();
             return;
         }
 
         // Połączenie z istniejącą bazą danych
         try (Connection conn = DriverManager.getConnection(DbConfig.DB_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
-            System.out.println("Połączono z bazą danych!");
+            System.out.println("Polaczono z baza danych!");
 
             String createUsersTable = """
                 CREATE TABLE IF NOT EXISTS users (
@@ -50,7 +50,7 @@ public class DbManager {
 
 
         } catch (SQLException e) {
-            System.err.println("Błąd podczas pracy z bazą danych:");
+            System.err.println("Blad podczas pracy z baza danych:");
             e.printStackTrace();
         }
 

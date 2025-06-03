@@ -33,7 +33,7 @@ public class UserService {
             String password = json.optString("password");
 
             if (nick.isEmpty() || password.isEmpty()) {
-                sendResponse(exchange, 400, "Brakuje nicka lub hasła");
+                sendResponse(exchange, 400, "Brakuje nicka lub hasla");
                 return;
             }
 
@@ -43,7 +43,7 @@ public class UserService {
                     stmt.setString(1, nick);
                     stmt.setString(2, password);
                     stmt.executeUpdate();
-                    sendResponse(exchange, 200, "Użytkownik dodany");
+                    sendResponse(exchange, 200, "Uzytkownik dodany");
                 } catch (SQLException e) {
                     if (e.getSQLState().startsWith("23")) {
                         sendResponse(exchange, 409, "Gracz o takim nicku juz istnieje");
@@ -54,7 +54,7 @@ public class UserService {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                sendResponse(exchange, 500, "Błąd serwera: " + e.getMessage());
+                sendResponse(exchange, 500, "Blad serwera: " + e.getMessage());
             }
         }
     }
@@ -82,7 +82,7 @@ public class UserService {
             String password = json.optString("password");
 
             if (nick.isEmpty() || password.isEmpty()) {
-                sendResponse(exchange, 400, "Brakuje nicka lub hasła");
+                sendResponse(exchange, 400, "Brakuje nicka lub hasla");
                 return;
             }
 
@@ -93,15 +93,15 @@ public class UserService {
                     stmt.setString(2, password);
                     try (ResultSet rs = stmt.executeQuery()) {
                         if (rs.next() && rs.getInt(1) > 0) {
-                            sendResponse(exchange, 200, "Zalogowano pomyślnie");
+                            sendResponse(exchange, 200, "Zalogowano pomyslnie");
                         } else {
-                            sendResponse(exchange, 401, "Nieprawidłowy nick lub hasło");
+                            sendResponse(exchange, 401, "Nieprawidlowy nick lub haslo");
                         }
                     }
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                sendResponse(exchange, 500, "Błąd serwera: " + e.getMessage());
+                sendResponse(exchange, 500, "Blad serwera: " + e.getMessage());
             }
         }
     }
