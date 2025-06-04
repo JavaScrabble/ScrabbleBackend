@@ -7,32 +7,43 @@ import java.util.Queue;
 public class GameEngine {
     private Board board;
     private TileBag tileBag;
+    private Player currentPlayer;
     private Queue<Player> turnQueue;
-    private boolean gameOver;
 
-    public GameEngine(List<Player> players) {
+    public GameEngine(List<String> nicks) {
         this.board = new Board();
         this.tileBag = new TileBag();
+
+        List<Player> players = nicks.stream().map(e -> new Player(e, new Rack(tileBag))).toList();
+
         this.turnQueue = new LinkedList<>(players);
-        this.gameOver = false;
 
         for (Player p : players) {
             p.getRack().refillBag();
         }
+
+        this.currentPlayer = turnQueue.poll();
     }
 
-    public void startGame() {
-        while (!gameOver) {
-            Player current = turnQueue.poll();
-            current.setTurn(true);
+    public Board getBoard() {
+        return board;
+    }
 
-            // send board and rack to current player
-            // receive move from player
-            // validate and apply move
-            // broadcast result
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
-            current.setTurn(false);
-            turnQueue.offer(current);
-        }
+    public Queue<Player> getTurnQueue() {
+        return turnQueue;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void nextTurn(){
+        turnQueue.offer(currentPlayer);
+        currentPlayer = turnQueue.poll();
+        currentPlayer.getRack().refillBag();
     }
 }
