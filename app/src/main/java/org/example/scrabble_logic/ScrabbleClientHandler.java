@@ -26,6 +26,15 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
             return;
         }
 
+        sendToClient("PLAYERS " + String.join(" ", playersInRoom.stream().map(AbstractClientHandler::getNickname).toList()));
+
+        playersInRoom.forEach(p -> {
+            try {
+                p.sendToClient("JOIN " + getNickname());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         playersInRoom.add(this);
 
         clientExecutor.submit(this);
