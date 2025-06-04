@@ -38,7 +38,7 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
         playersInRoom.add(this);
 
         clientExecutor.submit(this);
-        System.out.printf("SERVER LOG[%s CONNECTED!]%n", nickname);
+        System.out.printf("SCRABBLE LOG[%s CONNECTED!]%n", nickname);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                         nextTurn(game);
                     } catch (IllegalArgumentException e) {
                         sendToClient("INVALID");
-                        System.out.printf("[SERVER] %s makes an invalid move!%n", nickname);
+                        System.out.printf("SCRABBLE LOG[%s makes an invalid move!]%n", nickname);
 
                     }
                 }
@@ -89,7 +89,7 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                     nextTurn(game);
                 }
             } catch (SocketException e) {
-                System.out.printf("SERVER WARNING[%s, %s]%n", nickname, e.getMessage());
+                System.out.printf("SCRABBLE WARNING[%s, %s]%n", nickname, e.getMessage());
                 break;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -104,10 +104,10 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
             out.close();
             socket.close();
         } catch (IOException e) {
-            System.out.printf("SERVER ERROR[%s, %s]%n", nickname, e.getMessage());
+            System.out.printf("SCRABBLE ERROR[%s, %s]%n", nickname, e.getMessage());
         }
         playersInRoom.remove(this); // Effectively logout
-        System.out.printf("SERVER INFO[session with %s closed]%n", nickname);
+        System.out.printf("SCRABBLE INFO[session with %s closed]%n", nickname);
 
     }
 
