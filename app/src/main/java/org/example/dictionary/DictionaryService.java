@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class DictionaryService {
+public class DictionaryService implements DictionaryProvider{
 
-    public static boolean doesWordExist(String word) {
+    public boolean doesWordExist(String word) {
         try {
             URL url = new URL("https://api.dictionaryapi.dev/api/v2/entries/en/" + word);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

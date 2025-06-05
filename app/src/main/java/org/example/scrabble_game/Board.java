@@ -1,9 +1,11 @@
 package org.example.scrabble_game;
 
+import org.example.dictionary.DictionaryProvider;
 import org.example.dictionary.DictionaryService;
 
 public class Board {
     public static final int SIZE = 15;
+    private static final DictionaryProvider dictionary = new DictionaryService();
 
     /**
     * First 8 rows, after that it's mirrored
@@ -327,6 +329,6 @@ public class Board {
     }
 
     private boolean doesWordExist(Move move) {
-        return org.example.dictionary.DictionaryService.doesWordExist(move.getWord());
+        return dictionary.doesWordExist(move.getWord());
     }
 }

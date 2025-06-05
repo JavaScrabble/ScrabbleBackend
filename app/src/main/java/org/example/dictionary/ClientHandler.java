@@ -5,7 +5,7 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
-    private final DictionaryService dictionaryService = new DictionaryService();
+    private final DictionaryProvider dictionaryService = new DictionaryService();
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
