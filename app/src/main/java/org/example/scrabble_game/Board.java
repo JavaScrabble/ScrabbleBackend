@@ -177,6 +177,9 @@ public class Board {
             return false;
         }
 
+        if(!doesWordExist(move))
+            return false;
+
         // If first move, checks if it covers the centre square
         if (isFirstMove) {
             boolean isCentreCovered = doesMoveCoverCentre(move);

@@ -2,6 +2,7 @@ package org.example.scrabble_game;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class Rack {
     private final TileBag bag;
@@ -87,4 +88,8 @@ public class Rack {
     }
 
 
+    @Override
+    public String toString() {
+        return rack.stream().map(Tile::getLetter).map(String::valueOf).collect(Collectors.joining());
+    }
 }

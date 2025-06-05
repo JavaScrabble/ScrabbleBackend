@@ -41,7 +41,7 @@ public class TileBag {
         }
 
         // Return a random index between 0 and tiles.size()-1
-        int index = random.nextInt() % tiles.size();
+        int index = random.nextInt(tiles.size());
 
         // Get tile and return it
         Tile t = tiles.get(index);

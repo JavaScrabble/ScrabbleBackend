@@ -21,7 +21,7 @@ public class ChatClientHandler extends AbstractClientHandler {
         clientsInRoom.add(this);
 
         clientExecutor.submit(this);
-        System.out.printf("SERVER LOG[%s CONNECTED!]%n", nickname);
+        System.out.printf("CHAT LOG[%s CONNECTED!]%n", nickname);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ChatClientHandler extends AbstractClientHandler {
         while(!socket.isClosed()) {
             try{
                 String text = in.readUTF();
-                System.out.printf("SERVER LOG[%s: %s]%n", nickname, text);
+                System.out.printf("CHAT LOG[%s: %s]%n", nickname, text);
 
                 clientsInRoom.forEach(peer -> {
                     if(!peer.getNickname().equals(nickname)) {
@@ -45,11 +45,11 @@ public class ChatClientHandler extends AbstractClientHandler {
             }
             // Catches stuff like disconnects etc.
             catch(SocketException e){
-                System.out.printf("SERVER WARNING[%s, %s]%n", nickname, e.getMessage());
+                System.out.printf("CHAT WARNING[%s, %s]%n", nickname, e.getMessage());
                 break;
             }
             catch(IOException e){
-                System.out.printf("SERVER ERROR[%s, %s]%n", nickname, e.getMessage());
+                System.out.printf("CHAT ERROR[%s, %s]%n", nickname, e.getMessage());
                 break;
             }
         }
@@ -61,10 +61,10 @@ public class ChatClientHandler extends AbstractClientHandler {
             socket.close();
         }
         catch(IOException e){
-            System.out.printf("SERVER ERROR[%s, %s]%n", nickname, e.getMessage());
+            System.out.printf("CHAT ERROR[%s, %s]%n", nickname, e.getMessage());
         }
 
         clientsInRoom.remove(this); // Effectively logout
-        System.out.printf("SERVER INFO[session with %s closed]%n", nickname);
+        System.out.printf("CHAT INFO[session with %s closed]%n", nickname);
     }
 }
