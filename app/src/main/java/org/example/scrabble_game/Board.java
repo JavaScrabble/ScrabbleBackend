@@ -93,7 +93,7 @@ public class Board {
      */
     public void placeTile(char column, int row, Tile tile) {
         board[row - 1][column - 'A'].setTile(tile);
-        //Scoring.LAST_COVERED_INDICES.add(new Index(row - 1, column - 'A'));
+        MoveScoring.NEW_SQUARES_USED.add(new SquareCoordinate(row - 1, column - 'A'));
     }
 
     public String getHorizontalWord(int row, int startColumn, int endColumn) {
@@ -116,7 +116,7 @@ public class Board {
         if (!isValidMove(move, rack)) {
             throw new IllegalArgumentException("Invalid move placement");
         }
-        //Scoring.LAST_COVERED_INDICES.clear();
+        MoveScoring.reset();
         setFirstMove(false);
         int row, column;
         for (int i = 0; i < move.wordLength(); i++) {
@@ -163,10 +163,10 @@ public class Board {
             return false;
         }
         // Checks words formed
-        /*if (doesWordConflict(word)) {
-            Scrabble.printToOutput("> Word conflicts with existing word on board!");
+        if (doesWordConflict(move)) {
+            // komunikat np. Word conflicts;
             return false;
-        }*/
+        }
 
         // Checks if rack contains the required tiles for the move
         if (!doesRackHaveTiles(move, rack)) {
@@ -202,6 +202,48 @@ public class Board {
         } else {
             return (move.getStartRow() + move.wordLength() - 1) >= SIZE;
         }
+    }
+
+    // Checks if the move conflicts with existing words on the board
+    private boolean doesWordConflict(Move move) {
+        char[] wordArray = move.getWord().toCharArray();
+        int column = move.getStartCol();
+        int row = move.getStartCol();
+        // For horizontal move
+        if (move.isHorizontal()) {
+            // Check if the squares before and after the word are empty
+            if (Square.doesExist(column - 1, row) &&
+                    Square.doesExist(column + move.wordLength(), row)) {
+                if (!board[row][column - 1].isEmpty() ||
+                        !board[row][column + move.wordLength()].isEmpty()) {
+                    return true;
+                }
+            }
+            for (int i = 0; i < move.wordLength(); i++) {
+                // Square is filled but tile does not match the letter in the placed word
+                if (!board[row][column + i].isEmpty() &&
+                        board[row][column + i].getTile().getLetter() != wordArray[i]) {
+                    return true;
+                }
+            }
+        } else { // For vertical move
+            // Check if the squares before and after the word are empty
+            if (Square.doesExist(column, row - 1) &&
+                    Square.doesExist(column, row + move.wordLength())) {
+                if (!board[row - 1][column].isEmpty() ||
+                        !board[row + move.wordLength()][column].isEmpty()) {
+                    return true;
+                }
+            }
+            for (int i = 0; i < move.wordLength(); i++) {
+                // Square is filled but tile does not match the letter in the placed word
+                if (!board[row + i][column].isEmpty() &&
+                        board[row + i][column].getTile().getLetter() != wordArray[i]) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // Checks if the frame contains the letters necessary for word placement
@@ -330,5 +372,9 @@ public class Board {
 
     private boolean doesWordExist(Move move) {
         return dictionary.doesWordExist(move.getWord());
+    }
+
+    private boolean doExtraWordsExist(Move move) {
+
     }
 }
