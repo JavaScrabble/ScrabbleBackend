@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0fe4aa70-115b-4451-9223-73bce8ff5938" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/database/DbManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/database/DbManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/database/ScoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/database/ScoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/database/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/database/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_logic/ScrabbleClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_logic/ScrabbleClientHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,14 +52,22 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.ScrabbleBackend [build].executor": "Run",
     "Gradle.ScrabbleBackend [run].executor": "Run",
-    "git-widget-placeholder": "__sql",
+    "git-widget-placeholder": "dev__loc",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
 }]]></component>

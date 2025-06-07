@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
 
+import static org.example.scrabble_game.MoveScoring.calculateScore;
+
 public class ScrabbleClientHandler extends AbstractClientHandler {
     private static final Map<String, List<AbstractClientHandler>> scrabbleClients = new HashMap<>();
     private static final Map<String, GameEngine> games = new HashMap<>();
@@ -73,9 +75,13 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
 
                     try {
                         game.getBoard().applyMove(move, game.getCurrentPlayer().getRack());
+                        // -- tu nalezy dac
+                       // int score = calculateScore(move, game.getBoard());
 
                         for (AbstractClientHandler client : playersInRoom) {
                             client.sendToClient(text);
+                            //client.sendToClient("SCORED " + score + " points");
+                            // zapis do bazy danych
                         }
 
                         nextTurn(game);

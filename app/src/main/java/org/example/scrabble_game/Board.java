@@ -93,7 +93,7 @@ public class Board {
      */
     public void placeTile(char column, int row, Tile tile) {
         board[row - 1][column - 'A'].setTile(tile);
-        //Scoring.LAST_COVERED_INDICES.add(new Index(row - 1, column - 'A'));
+        MoveScoring.NEW_SQUARES_USED.add(new SquareCoordinate(row - 1, column - 'A'));
     }
 
     public String getHorizontalWord(int row, int startColumn, int endColumn) {
@@ -116,7 +116,7 @@ public class Board {
         if (!isValidMove(move, rack)) {
             throw new IllegalArgumentException("Invalid move placement");
         }
-        //Scoring.LAST_COVERED_INDICES.clear();
+        MoveScoring.reset();
         setFirstMove(false);
         int row, column;
         for (int i = 0; i < move.wordLength(); i++) {
@@ -163,10 +163,10 @@ public class Board {
             return false;
         }
         // Checks words formed
-        /*if (doesWordConflict(word)) {
-            Scrabble.printToOutput("> Word conflicts with existing word on board!");
+        if (doesWordConflict(move)) {
+            // komunikat np. Word conflicts;
             return false;
-        }*/
+        }
 
         // Checks if rack contains the required tiles for the move
         if (!doesRackHaveTiles(move, rack)) {
@@ -180,6 +180,9 @@ public class Board {
         }
 
         if(!doesWordExist(move))
+            return false;
+
+        if(!doExtraWordsExist(move))
             return false;
 
         // If first move, checks if it covers the centre square
@@ -202,6 +205,48 @@ public class Board {
         } else {
             return (move.getStartRow() + move.wordLength() - 1) >= SIZE;
         }
+    }
+
+    // Checks if the move conflicts with existing words on the board
+    private boolean doesWordConflict(Move move) {
+        char[] wordArray = move.getWord().toCharArray();
+        int column = move.getStartCol();
+        int row = move.getStartCol();
+        // For horizontal move
+        if (move.isHorizontal()) {
+            // Check if the squares before and after the word are empty
+            if (Square.doesExist(column - 1, row) &&
+                    Square.doesExist(column + move.wordLength(), row)) {
+                if (!board[row][column - 1].isEmpty() ||
+                        !board[row][column + move.wordLength()].isEmpty()) {
+                    return true;
+                }
+            }
+            for (int i = 0; i < move.wordLength(); i++) {
+                // Square is filled but tile does not match the letter in the placed word
+                if (!board[row][column + i].isEmpty() &&
+                        board[row][column + i].getTile().getLetter() != wordArray[i]) {
+                    return true;
+                }
+            }
+        } else { // For vertical move
+            // Check if the squares before and after the word are empty
+            if (Square.doesExist(column, row - 1) &&
+                    Square.doesExist(column, row + move.wordLength())) {
+                if (!board[row - 1][column].isEmpty() ||
+                        !board[row + move.wordLength()][column].isEmpty()) {
+                    return true;
+                }
+            }
+            for (int i = 0; i < move.wordLength(); i++) {
+                // Square is filled but tile does not match the letter in the placed word
+                if (!board[row + i][column].isEmpty() &&
+                        board[row + i][column].getTile().getLetter() != wordArray[i]) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // Checks if the frame contains the letters necessary for word placement
@@ -328,7 +373,99 @@ public class Board {
         return false;
     }
 
+    /**
+     * Check if the main word of a move is a valid dictionary word
+     */
     private boolean doesWordExist(Move move) {
         return dictionary.doesWordExist(move.getWord());
+    }
+
+    /**
+     * Check if all extra words formed by a move are valid dictionary word
+     */
+    private boolean doExtraWordsExist(Move move) {
+        if (move.isHorizontal()) {
+            return doVerticalExtraWordsExist(move);
+        } else {
+            return doHorizontalExtraWordsExist(move);
+        }
+    }
+
+    private boolean doVerticalExtraWordsExist(Move move) {
+        int mainStartCol = move.getStartCol();
+        int mainEndCol= mainStartCol + move.wordLength() - 1;
+        int mainRow = move.getStartRow();
+
+        // For each square in the word not previously used (currently empty)
+        for (int i = mainStartCol; i <= mainEndCol; i++) {
+            if (board[mainRow][i].isEmpty()) {
+                // Calculate start and end rows of the perpinducular vertical word
+                int startRow = mainRow;
+                int endRow = mainRow;
+                int column = i;
+
+                while (Square.doesExist(column, startRow-1)  && !board[startRow - 1][column].isEmpty()) // Calculate the start row of perpinducular word
+                    startRow -= 1;
+                while (Square.doesExist(column, startRow+1)  && !board[startRow + 1][column].isEmpty()) // Calculate the end row of perpinducular word
+                    endRow += 1;
+
+                // if extra vertical word exists, read it and check
+                if (startRow != endRow) {
+                    String extraWord = "";
+                    char c;
+                    for (int j = startRow; j <= endRow; j++) {
+                        Square square = board[j][column];
+                        if (j == mainRow) {
+                            c = move.getWord().charAt(column - move.getStartCol());
+                        } else {
+                            c = square.getTile().getLetter();
+                        }
+                        extraWord += c;
+                    }
+                    if (!dictionary.doesWordExist(extraWord))
+                            return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean doHorizontalExtraWordsExist(Move move) {
+        int mainStartRow = move.getStartRow();
+        int mainEndRow= mainStartRow + move.wordLength() - 1;
+        int mainCol = move.getStartCol();
+
+        // For each square in the word not previously used (currently empty)
+        for (int i = mainStartRow; i <= mainEndRow; i++) {
+            if (board[i][mainCol].isEmpty()) {
+                // Calculate start and end rows of the perpinducular horizontal word
+                int startCol = mainCol;
+                int endCol = mainCol;
+                int row = i;
+
+                while (Square.doesExist(startCol-1, row)  && !board[row][startCol-1].isEmpty()) // Calculate the start col of perpinducular word
+                    startCol -= 1;
+                while (Square.doesExist(startCol+1, row)  && !board[row][startCol+1].isEmpty()) // Calculate the end col of perpinducular word
+                    endCol += 1;
+
+                // if extra vertical word exists, read it and check
+                if (startCol != endCol) {
+                    String extraWord = "";
+                    char c;
+                    for (int j = startCol; j <= endCol; j++) {
+                        Square square = board[row][j];
+                        if (j == mainCol) {
+                            c = move.getWord().charAt(row - move.getStartRow());
+                        } else {
+                            c = square.getTile().getLetter();
+                        }
+                        extraWord += c;
+                    }
+                    if (!dictionary.doesWordExist(extraWord))
+                        return false;
+                }
+            }
+        }
+        return true;
     }
 }
