@@ -29,7 +29,7 @@ public class ChatClientHandler extends AbstractClientHandler {
         while(!socket.isClosed()) {
             try{
                 String text = in.readUTF();
-                System.out.printf("CHAT LOG[%s: %s]%n", nickname, text);
+                System.out.printf("CHAT LOG[received %s: %s]%n", nickname, text);
 
                 clientsInRoom.forEach(peer -> {
                     if(!peer.getNickname().equals(nickname)) {
@@ -66,5 +66,11 @@ public class ChatClientHandler extends AbstractClientHandler {
 
         clientsInRoom.remove(this); // Effectively logout
         System.out.printf("CHAT INFO[session with %s closed]%n", nickname);
+    }
+
+    @Override
+    public void sendToClient(Object msg) throws IOException {
+        System.out.printf("CHAT LOG[sending to %s: %s]%n", nickname, msg.toString());
+        super.sendToClient(msg);
     }
 }

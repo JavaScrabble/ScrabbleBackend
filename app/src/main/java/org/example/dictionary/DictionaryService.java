@@ -2,13 +2,14 @@ package org.example.dictionary;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 public class DictionaryService implements DictionaryProvider{
 
     public boolean doesWordExist(String word) {
         try {
-            URL url = new URL("https://api.dictionaryapi.dev/api/v2/entries/en/" + word);
+            URL url = URI.create("https://api.dictionaryapi.dev/api/v2/entries/en/" + word).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(5000);

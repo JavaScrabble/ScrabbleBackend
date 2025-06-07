@@ -18,6 +18,6 @@ public class DbController {
         server.createContext("/best", scoreService.new GetBestRecordsHandler());
         server.setExecutor(null);
         server.start();
-        System.out.println("Serwer uruchomiony na porcie 8000...");
+        System.out.println("Serwer HTTP uruchomiony na porcie 8000...");
     }
 }

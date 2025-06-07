@@ -10,7 +10,7 @@ public class ChatServer {
     public static void startServer(int port){
         new Thread(() -> {
             try(ServerSocket serverSocket = new ServerSocket(port)) {
-                System.out.printf("[SERVER STARTED ON PORT %d]%n", port);
+                System.out.printf("[CHAT SERVER STARTED ON PORT %d]%n", port);
 
                 while(serverSocket.isBound()) {
                     Socket socket = serverSocket.accept();
@@ -18,7 +18,7 @@ public class ChatServer {
                         new ChatClientHandler(socket);
                     }
                     catch (IOException | ClassNotFoundException e){
-                        System.out.println("SERVER ERROR[Can't create ChatClientHandler!]");
+                        System.out.println("CHAT SERVER ERROR[Can't create ChatClientHandler!]");
                         e.printStackTrace();
                         socket.close();
                     }

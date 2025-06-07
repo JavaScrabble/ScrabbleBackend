@@ -8,7 +8,7 @@ public class DictionarySocket {
 
     public static void initialize(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server started on port: " + port);
+        System.out.println("Dictionary server started on port: " + port);
 
         new Thread(() -> {
             while (true) {

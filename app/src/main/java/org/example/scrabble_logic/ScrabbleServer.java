@@ -10,7 +10,7 @@ public class ScrabbleServer {
     public static void startServer(int port){
         new Thread(() -> {
             try(ServerSocket serverSocket = new ServerSocket(port)) {
-                System.out.printf("[SERVER STARTED ON PORT %d]%n", port);
+                System.out.printf("[SCRABBLE SERVER STARTED ON PORT %d]%n", port);
 
                 while(serverSocket.isBound()) {
                     Socket socket = serverSocket.accept();
@@ -18,7 +18,7 @@ public class ScrabbleServer {
                         new ScrabbleClientHandler(socket);
                     }
                     catch (IOException | ClassNotFoundException e){
-                        System.out.println("SERVER ERROR[Can't create ChatClientHandler!]");
+                        System.out.println("SCRABBLE SERVER ERROR[Can't create ScrabbleClientHandler!]");
                         e.printStackTrace();
                         socket.close();
                     }

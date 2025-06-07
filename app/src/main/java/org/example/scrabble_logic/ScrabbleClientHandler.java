@@ -47,9 +47,9 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
         while (!socket.isClosed()) {
             try {
                 String text = (String) in.readObject();
-                if (text.startsWith("SCRABBLE")) {
-                    System.out.println("GAME START");
+                System.out.printf("SCRABBLE LOG[received %s: %s]%n", nickname, text);
 
+                if (text.startsWith("SCRABBLE")) {
                     games.putIfAbsent(roomID, new GameEngine(playersInRoom.stream().map(AbstractClientHandler::getNickname).toList()));
                     GameEngine game = games.get(roomID);
 
@@ -81,8 +81,6 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                         nextTurn(game);
                     } catch (IllegalArgumentException e) {
                         sendToClient("INVALID");
-                        System.out.printf("SCRABBLE LOG[%s makes an invalid move!]%n", nickname);
-
                     }
                 }
                 else if (text.startsWith("SKIP")) {
@@ -121,5 +119,11 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
         Player player = game.getCurrentPlayer();
         AbstractClientHandler client = playersInRoom.stream().filter(e -> e.getNickname().equals(player.getName())).findFirst().orElse(null);
         client.sendToClient("RACK " + player.getRack());
+    }
+
+    @Override
+    public void sendToClient(Object msg) throws IOException {
+        System.out.printf("SCRABBLE LOG[sending to %s: %s]%n", nickname, msg.toString());
+        super.sendToClient(msg);
     }
 }
