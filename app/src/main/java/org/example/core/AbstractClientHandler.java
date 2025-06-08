@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class AbstractClientHandler implements Runnable {
+    protected static final String ERROR_TEMPLATE = "%s, %s";
     protected static ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
     protected final Socket socket;
