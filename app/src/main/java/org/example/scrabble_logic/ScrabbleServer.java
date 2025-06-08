@@ -5,10 +5,15 @@ import org.example.chat.ChatClientHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ScrabbleServer {
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ScrabbleServer() {}
+
     public static void startServer(int port){
-        new Thread(() -> {
+        executor.submit(() -> {
             try(ServerSocket serverSocket = new ServerSocket(port)) {
                 System.out.printf("[SCRABBLE SERVER STARTED ON PORT %d]%n", port);
 
@@ -27,6 +32,6 @@ public class ScrabbleServer {
                 e.printStackTrace();
                 System.exit(1);
             }
-        }).start();
+        });
     }
 }
