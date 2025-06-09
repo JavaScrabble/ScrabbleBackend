@@ -46,4 +46,26 @@ public class GameEngine {
         currentPlayer = turnQueue.poll();
         currentPlayer.getRack().refillBag();
     }
+
+    public Player getWinner() {
+        int maxScore = 0;
+        Player winner = null;
+
+        for (Player p : turnQueue) {
+            if (p.getScore() > maxScore) {
+                maxScore = p.getScore();
+                winner = p;
+            }
+        }
+        return winner;
+    }
+
+    public String getFinalScores() {
+        String results = new String();
+        for (Player p : turnQueue) {
+            results += p.getName() + " : " + p.getScore() + "\n";
+        }
+
+        return results;
+    }
 }

@@ -82,10 +82,16 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                         for (AbstractClientHandler client : playersInRoom) {
                             client.sendToClient(text);
                             client.sendToClient("SCORED " + score + " points");
-                            // zapis do bazy danych
                         }
 
-                        nextTurn(game);
+                        if (game.getCurrentPlayer().getRack().isEmpty()) {
+                            String results = "FINAL RESULTS:\n" + game.getFinalScores();
+                            for (AbstractClientHandler client : playersInRoom) {
+                                client.sendToClient("GAME END!\n" +  game.getWinner().getName() + "WON!\n"+results);
+                            }
+                        } else {
+                            nextTurn(game);
+                        }
                     } catch (IllegalArgumentException e) {
                         sendToClient("INVALID");
                         System.out.printf("SCRABBLE LOG[%s makes an invalid move!]%n", nickname);
