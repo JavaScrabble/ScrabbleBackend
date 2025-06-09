@@ -11,6 +11,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.example.scrabble_game.MoveScoring.calculateScore;
+
 public class ScrabbleClientHandler extends AbstractClientHandler {
     private static final Logger LOGGER = Logger.getLogger(ScrabbleClientHandler.class.getName());
     private static final Map<String, List<AbstractClientHandler>> scrabbleClients = new HashMap<>();
@@ -87,9 +89,13 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
 
                     try {
                         game.getBoard().applyMove(move, game.getCurrentPlayer().getRack());
+                        // -- tu nalezy dac
+                       // int score = calculateScore(move, game.getBoard());
 
                         for (AbstractClientHandler client : playersInRoom) {
                             client.sendToClient(text);
+                            //client.sendToClient("SCORED " + score + " points");
+                            // zapis do bazy danych
                         }
 
                         nextTurn(game);
