@@ -5,12 +5,17 @@ import org.example.chat.ChatClientHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ScrabbleServer {
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ScrabbleServer() {}
+
     public static void startServer(int port){
-        new Thread(() -> {
+        executor.submit(() -> {
             try(ServerSocket serverSocket = new ServerSocket(port)) {
-                System.out.printf("[SERVER STARTED ON PORT %d]%n", port);
+                System.out.printf("[SCRABBLE SERVER STARTED ON PORT %d]%n", port);
 
                 while(serverSocket.isBound()) {
                     Socket socket = serverSocket.accept();
@@ -18,7 +23,7 @@ public class ScrabbleServer {
                         new ScrabbleClientHandler(socket);
                     }
                     catch (IOException | ClassNotFoundException e){
-                        System.out.println("SERVER ERROR[Can't create ChatClientHandler!]");
+                        System.out.println("SCRABBLE SERVER ERROR[Can't create ScrabbleClientHandler!]");
                         e.printStackTrace();
                         socket.close();
                     }
@@ -27,6 +32,6 @@ public class ScrabbleServer {
                 e.printStackTrace();
                 System.exit(1);
             }
-        }).start();
+        });
     }
 }
