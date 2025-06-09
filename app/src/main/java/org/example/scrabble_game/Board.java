@@ -179,14 +179,16 @@ public class Board {
         // Checks whether the placement uses at least one letter from frame
         if (!isRackUsed(move, rack)) {
             // komunikat
+            //System.out.println("LOG: rack not used");
             return false;
         }
 
-        if(!doesWordExist(move))
+        if(!doesWordExist(move)) {
             return false;
+        }
 
         if(!doExtraWordsExist(move)) {
-            System.out.println("LOG: extra words conflict");
+            //System.out.println("LOG: extra words conflict");
             return false;
         }
 
@@ -300,7 +302,7 @@ public class Board {
             } else {
                 // Row index increases for word placed vertically
                 column = move.getStartCol();
-                row = move.getStartRow()+1;
+                row = move.getStartRow() + i;
             }
             char letter = move.wordCharAt(i);
             // If square is empty, check if frame contains the required letter or a blank tile

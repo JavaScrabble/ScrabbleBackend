@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0fe4aa70-115b-4451-9223-73bce8ff5938" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_game/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_game/GameEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_game/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_logic/ScrabbleClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_logic/ScrabbleClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_game/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/example/scrabble_game/Board.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,9 +68,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2yHws1LXxY0uIz0MIpttZoiG83e" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -84,7 +82,7 @@
     "Gradle.ScrabbleBackend [build].executor": "Run",
     "Gradle.ScrabbleBackend [run].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dev__loc",
+    "git-widget-placeholder": "dev__loc2",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
