@@ -160,17 +160,20 @@ public class Board {
         // Checks if word length exceeds the size of the board
         if (isOverflowed(move)) {
             // komunikat np. Word goes beyond the board;
+            //System.out.println("LOG: Word overflow");
             return false;
         }
-        // Checks words formed
+        // Checks if it conflicts with another word
         if (doesWordConflict(move)) {
             // komunikat np. Word conflicts;
+            //System.out.println("LOG: Word conflicts");
             return false;
         }
 
         // Checks if rack contains the required tiles for the move
         if (!doesRackHaveTiles(move, rack)) {
             // komunikat
+            //System.out.println("LOG: rack doesn't have tiles");
             return false;
         }
         // Checks whether the placement uses at least one letter from frame
@@ -182,8 +185,10 @@ public class Board {
         if(!doesWordExist(move))
             return false;
 
-        if(!doExtraWordsExist(move))
+        if(!doExtraWordsExist(move)) {
+            System.out.println("LOG: extra words conflict");
             return false;
+        }
 
         // If first move, checks if it covers the centre square
         if (isFirstMove) {
@@ -211,7 +216,7 @@ public class Board {
     private boolean doesWordConflict(Move move) {
         char[] wordArray = move.getWord().toCharArray();
         int column = move.getStartCol();
-        int row = move.getStartCol();
+        int row = move.getStartRow();
         // For horizontal move
         if (move.isHorizontal()) {
             // Check if the squares before and after the word are empty
@@ -265,7 +270,7 @@ public class Board {
             } else {
                 // Row index increases for word placed vertically
                 column = move.getStartCol();
-                row = move.getStartRow()+1;
+                row = move.getStartRow() + i;
             }
             String letter = Character.toString(move.wordCharAt(i));
             if (board[row][column].isEmpty()) {

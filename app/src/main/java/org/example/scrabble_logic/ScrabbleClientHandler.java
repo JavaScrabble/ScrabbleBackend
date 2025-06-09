@@ -75,12 +75,13 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
 
                     try {
                         game.getBoard().applyMove(move, game.getCurrentPlayer().getRack());
-                        // -- tu nalezy dac
-                       // int score = calculateScore(move, game.getBoard());
+
+                       int score = calculateScore(move, game.getBoard());
+                       game.getCurrentPlayer().increaseScore(score);
 
                         for (AbstractClientHandler client : playersInRoom) {
                             client.sendToClient(text);
-                            //client.sendToClient("SCORED " + score + " points");
+                            client.sendToClient("SCORED " + score + " points");
                             // zapis do bazy danych
                         }
 
