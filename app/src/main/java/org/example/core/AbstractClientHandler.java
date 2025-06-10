@@ -33,6 +33,10 @@ public abstract class AbstractClientHandler implements Runnable {
         out.flush();
     }
 
+    public void closeSocket() throws IOException {
+        socket.close();
+    }
+
     public String getNickname() {
         return nickname;
     }

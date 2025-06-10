@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class GameEngine {
+    private boolean skippedBefore = false;
     private Board board;
     private TileBag tileBag;
     private Player currentPlayer;
@@ -39,6 +40,14 @@ public class GameEngine {
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    public boolean isSkippedBefore() {
+        return skippedBefore;
+    }
+
+    public void setSkippedBefore(boolean skippedBefore) {
+        this.skippedBefore = skippedBefore;
     }
 
     public void nextTurn(){

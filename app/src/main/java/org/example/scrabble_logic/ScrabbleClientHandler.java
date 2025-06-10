@@ -90,50 +90,57 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                     try {
                         game.getBoard().applyMove(move, game.getCurrentPlayer().getRack());
 
-                       int score = calculateScore(move, game.getBoard());
-                       game.getCurrentPlayer().increaseScore(score);
-                       String results = game.getScores();
+                        int score = calculateScore(move, game.getBoard());
+                        game.getCurrentPlayer().increaseScore(score);
+                        String results = game.getScores();
 
                         for (AbstractClientHandler client : playersInRoom) {
                             client.sendToClient(text);
                             client.sendToClient("SCORES:\t" + results);
                         }
 
+                        game.setSkippedBefore(false);
                         if (game.getCurrentPlayer().getRack().isEmpty()) {
-                            for (AbstractClientHandler client : playersInRoom) {
-                                client.sendToClient("GAME_END " +  game.getWinner().getName() + " WON");
-                            }
-                        } else {
+                            gameOver(game);
+                        }
+                        else {
                             nextTurn(game);
                         }
-                    } catch (IllegalArgumentException e) {
+                    }
+                    catch (IllegalArgumentException e) {
                         sendToClient("INVALID");
                     }
                 }
                 else if (text.startsWith("SKIP")) {
-                    nextTurn(game);
+                    if (game.isSkippedBefore())
+                        gameOver(game);
+                    else {
+                        game.setSkippedBefore(true);
+                        nextTurn(game);
+                    }
                 }
-            } catch (SocketException e) {
+            }
+            catch (SocketException e) {
                 LOGGER.warning("%s, %s".formatted(nickname, e.getMessage()));
                 break;
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
+            }
+            catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
 
         // Clean up the connections
         try {
-            in.close();
-            out.close();
-            socket.close();
-        } catch (IOException e) {
+            closeSocket();
+        }
+        catch (IOException e) {
             LOGGER.severe(ERROR_TEMPLATE.formatted(nickname, e.getMessage()));
         }
         playersInRoom.remove(this); // Effectively logout
         LOGGER.info("%s disconnected from room %s".formatted(nickname, roomID));
-
     }
 
     private void nextTurn(GameEngine game) throws IOException {
@@ -146,6 +153,16 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
         Player player = game.getCurrentPlayer();
         AbstractClientHandler client = playersInRoom.stream().filter(e -> e.getNickname().equals(player.getName())).findFirst().orElse(null);
         client.sendToClient("RACK " + player.getRack());
+    }
+
+    private void gameOver(GameEngine game) throws IOException {
+        for (AbstractClientHandler client : playersInRoom) {
+            client.sendToClient("GAME_END " + game.getWinner().getName() + " WON");
+            client.closeSocket();
+        }
+
+        playersInRoom.clear();
+        games.remove(roomID);
     }
 
     @Override
