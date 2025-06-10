@@ -16,6 +16,7 @@ public class DbController {
         ScoreService scoreService = new ScoreService();
         server.createContext("/scores", scoreService.new InsertRecordHandler());
         server.createContext("/best", scoreService.new GetBestRecordsHandler());
+        server.createContext("/updateScore", scoreService.new UpdateRecordHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Serwer HTTP uruchomiony na porcie 8000...");
