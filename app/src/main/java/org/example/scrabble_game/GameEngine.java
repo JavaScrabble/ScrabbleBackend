@@ -48,8 +48,8 @@ public class GameEngine {
     }
 
     public Player getWinner() {
-        int maxScore = 0;
-        Player winner = null;
+        int maxScore = getCurrentPlayer().getScore();
+        Player winner = getCurrentPlayer();
 
         for (Player p : turnQueue) {
             if (p.getScore() > maxScore) {
@@ -60,12 +60,12 @@ public class GameEngine {
         return winner;
     }
 
-    public String getFinalScores() {
-        String results = new String();
+    public String getScores() {
+        String scores = "";
+        scores += getCurrentPlayer().getName() + " " + getCurrentPlayer().getScore() + "|\t";
         for (Player p : turnQueue) {
-            results += p.getName() + " : " + p.getScore() + "\n";
+            scores += p.getName() + " " + p.getScore() + "|\t";
         }
-
-        return results;
+        return scores;
     }
 }
