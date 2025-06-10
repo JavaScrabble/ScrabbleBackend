@@ -94,9 +94,9 @@ public class MoveScoring {
         for (SquareCoordinate coord : NEW_SQUARES_USED) {
             int wordScore = 0;
             int wordMultiplier = 1;
-            int startCol = coord.getRow();
-            int endCol = coord.getRow();
-            int row = coord.getColumn();
+            int startCol = coord.getColumn();
+            int endCol = coord.getColumn();
+            int row = coord.getRow();
 
             while (Square.doesExist(startCol-1, row)  && !b[row][startCol-1].isEmpty()) // Calculate the start row of perpinducular word
                 startCol -= 1;
