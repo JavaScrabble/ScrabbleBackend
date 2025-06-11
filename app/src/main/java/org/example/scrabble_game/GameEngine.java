@@ -45,6 +45,10 @@ public class GameEngine {
         return turnQueue;
     }
 
+    public TileBag getTileBag() {
+        return tileBag;
+    }
+
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }

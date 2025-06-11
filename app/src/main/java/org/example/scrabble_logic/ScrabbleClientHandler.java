@@ -109,7 +109,7 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
 
 
                         game.setSkippedBefore(false);
-                        if (game.getCurrentPlayer().getRack().isEmpty()) {
+                        if (game.getCurrentPlayer().getRack().isEmpty() && game.getTileBag().isEmpty()) {
                             gameOver(game);
                         }
                         else {
