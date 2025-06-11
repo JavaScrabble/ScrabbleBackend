@@ -1,18 +1,12 @@
 package org.example.scrabble_game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player {
     private String name;
     private Rack rack;
     private int score;
-    private boolean isTurn;
 
-
-
-
-    public Player(Rack rack) {
+    public Player(String name, Rack rack) {
+        this.name = name;
         this.rack = rack;
         score = 0;
     }
@@ -29,14 +23,15 @@ public class Player {
         score += value;
     }
 
-    /**
-    * Sets the player's turn
-     */
-    public void setTurn(boolean isTurn) {
-        this.isTurn = isTurn;
-    }
-
     public Rack getRack() {
         return rack;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

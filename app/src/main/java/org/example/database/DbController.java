@@ -9,10 +9,14 @@ public class DbController {
 
     public static void startServer() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        server.createContext("/register", new UserService.RegisterHandler());
-        server.createContext("/login", new UserService.LoginHandler()); // nowy endpoint
-        server.createContext("/scores", new ScoreService.InsertRecordHandler());
-        server.createContext("/best", new ScoreService.GetBestRecordsHandler());
+        UserService userService = new UserService();
+        server.createContext("/register", userService.new RegisterHandler());
+        server.createContext("/login", userService.new LoginHandler());
+
+        ScoreService scoreService = new ScoreService();
+        server.createContext("/scores", scoreService.new InsertRecordHandler());
+        server.createContext("/best", scoreService.new GetBestRecordsHandler());
+        server.createContext("/updateScore", scoreService.new UpdateRecordHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Serwer HTTP uruchomiony na porcie 8000...");

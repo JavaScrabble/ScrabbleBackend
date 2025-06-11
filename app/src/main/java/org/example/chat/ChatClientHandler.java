@@ -9,10 +9,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatClientHandler extends AbstractClientHandler {
+    private static final Logger LOGGER = Logger.getLogger(ChatClientHandler.class.getName());
     private static final Map<String, List<AbstractClientHandler>> chatClients = new HashMap<>();
     private final List<AbstractClientHandler> clientsInRoom;
+
+    static {
+        try {
+            FileHandler fh = new FileHandler("chat.log");
+            LOGGER.addHandler(fh);
+            LOGGER.setLevel(Level.ALL);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public ChatClientHandler(Socket socket) throws IOException, ClassNotFoundException {
         super(socket);
@@ -21,7 +35,7 @@ public class ChatClientHandler extends AbstractClientHandler {
         clientsInRoom.add(this);
 
         clientExecutor.submit(this);
-        System.out.printf("SERVER LOG[%s CONNECTED!]%n", nickname);
+        LOGGER.info("%s connected to room %s".formatted(nickname, roomID));
     }
 
     @Override
@@ -29,7 +43,7 @@ public class ChatClientHandler extends AbstractClientHandler {
         while(!socket.isClosed()) {
             try{
                 String text = in.readUTF();
-                System.out.printf("SERVER LOG[%s: %s]%n", nickname, text);
+                LOGGER.fine("Received message from %s: %s".formatted(nickname, text));
 
                 clientsInRoom.forEach(peer -> {
                     if(!peer.getNickname().equals(nickname)) {
@@ -45,11 +59,11 @@ public class ChatClientHandler extends AbstractClientHandler {
             }
             // Catches stuff like disconnects etc.
             catch(SocketException e){
-                System.out.printf("SERVER WARNING[%s, %s]%n", nickname, e.getMessage());
+                LOGGER.warning(ERROR_TEMPLATE.formatted(nickname, e.getMessage()));
                 break;
             }
             catch(IOException e){
-                System.out.printf("SERVER ERROR[%s, %s]%n", nickname, e.getMessage());
+                LOGGER.severe(ERROR_TEMPLATE.formatted(nickname, e.getMessage()));
                 break;
             }
         }
@@ -61,10 +75,16 @@ public class ChatClientHandler extends AbstractClientHandler {
             socket.close();
         }
         catch(IOException e){
-            System.out.printf("SERVER ERROR[%s, %s]%n", nickname, e.getMessage());
+            LOGGER.severe(ERROR_TEMPLATE.formatted(nickname, e.getMessage()));
         }
 
         clientsInRoom.remove(this); // Effectively logout
-        System.out.printf("SERVER INFO[session with %s closed]%n", nickname);
+        LOGGER.info("%s disconnected from room %s".formatted(nickname, roomID));
+    }
+
+    @Override
+    public void sendToClient(Object msg) throws IOException {
+        LOGGER.fine("Sending message to %s: %s".formatted(nickname, msg));
+        super.sendToClient(msg);
     }
 }
