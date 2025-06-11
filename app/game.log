@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2025-06-11T11:29:21.146369Z</date>
+  <millis>1749641361146</millis>
+  <nanos>369000</nanos>
+  <sequence>1</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>FINE</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>sendToClient</method>
+  <thread>23</thread>
+  <message>Sending command to nick: PLAYERS </message>
+</record>
+<record>
+  <date>2025-06-11T11:29:21.162088500Z</date>
+  <millis>1749641361162</millis>
+  <nanos>88500</nanos>
+  <sequence>2</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>INFO</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>&lt;init&gt;</method>
+  <thread>23</thread>
+  <message>nick connected to room 1</message>
+</record>
+<record>
+  <date>2025-06-11T11:37:03.268526Z</date>
+  <millis>1749641823268</millis>
+  <nanos>526000</nanos>
+  <sequence>3</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>WARNING</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>run</method>
+  <thread>38</thread>
+  <message>nick, Connection reset</message>
+</record>
+<record>
+  <date>2025-06-11T11:37:03.272741700Z</date>
+  <millis>1749641823272</millis>
+  <nanos>741700</nanos>
+  <sequence>5</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>INFO</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>run</method>
+  <thread>38</thread>
+  <message>nick disconnected from room 1</message>
+</record>
+<record>
+  <date>2025-06-11T11:37:26.692759Z</date>
+  <millis>1749641846692</millis>
+  <nanos>759000</nanos>
+  <sequence>8</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>FINE</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>sendToClient</method>
+  <thread>23</thread>
+  <message>Sending command to nick: PLAYERS </message>
+</record>
+<record>
+  <date>2025-06-11T11:37:26.694281900Z</date>
+  <millis>1749641846694</millis>
+  <nanos>281900</nanos>
+  <sequence>9</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>INFO</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>&lt;init&gt;</method>
+  <thread>23</thread>
+  <message>nick connected to room 1</message>
+</record>
+<record>
+  <date>2025-06-11T11:37:59.204254900Z</date>
+  <millis>1749641879204</millis>
+  <nanos>254900</nanos>
+  <sequence>11</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>WARNING</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>run</method>
+  <thread>38</thread>
+  <message>nick, Connection reset</message>
+</record>
+<record>
+  <date>2025-06-11T11:37:59.204753500Z</date>
+  <millis>1749641879204</millis>
+  <nanos>753500</nanos>
+  <sequence>12</sequence>
+  <logger>org.example.scrabble_logic.ScrabbleClientHandler</logger>
+  <level>INFO</level>
+  <class>org.example.scrabble_logic.ScrabbleClientHandler</class>
+  <method>run</method>
+  <thread>38</thread>
+  <message>nick disconnected from room 1</message>
+</record>

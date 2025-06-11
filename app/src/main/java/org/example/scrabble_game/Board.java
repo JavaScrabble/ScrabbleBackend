@@ -291,7 +291,7 @@ public class Board {
         return true;
     }
 
-    // Checks that at least one letter from the frame is used
+    // Checks that at least one letter from the rack is used
     private boolean isRackUsed(Move move, Rack rack) {
         int row, column;
         for (int i = 0; i < move.wordLength(); i++) {
@@ -418,18 +418,16 @@ public class Board {
 
                 // if extra vertical word exists, read it and check
                 if (startRow != endRow) {
-                    String extraWord = "";
-                    char c;
+                    StringBuilder extraWord = new StringBuilder();
                     for (int j = startRow; j <= endRow; j++) {
                         Square square = board[j][column];
                         if (j == mainRow) {
-                            c = move.getWord().charAt(column - move.getStartCol());
+                            extraWord.append(move.getWord().charAt(column - mainStartCol));
                         } else {
-                            c = square.getTile().getLetter();
+                            extraWord.append(square.getTile().getLetter());
                         }
-                        extraWord += c;
                     }
-                    if (!dictionary.doesWordExist(extraWord))
+                    if (!dictionary.doesWordExist(extraWord.toString()))
                             return false;
                 }
             }
@@ -457,18 +455,16 @@ public class Board {
 
                 // if extra vertical word exists, read it and check
                 if (startCol != endCol) {
-                    String extraWord = "";
-                    char c;
+                    StringBuilder extraWord = new StringBuilder();
                     for (int j = startCol; j <= endCol; j++) {
                         Square square = board[row][j];
                         if (j == mainCol) {
-                            c = move.getWord().charAt(row - move.getStartRow());
+                            extraWord.append(move.getWord().charAt(row - mainCol));
                         } else {
-                            c = square.getTile().getLetter();
+                            extraWord.append(square.getTile().getLetter());
                         }
-                        extraWord += c;
                     }
-                    if (!dictionary.doesWordExist(extraWord))
+                    if (!dictionary.doesWordExist(extraWord.toString()))
                         return false;
                 }
             }

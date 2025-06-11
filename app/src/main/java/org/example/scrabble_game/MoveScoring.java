@@ -63,9 +63,9 @@ public class MoveScoring {
             int endRow = coord.getRow();
             int column = coord.getColumn();
 
-            while (Square.doesExist(column, startRow-1)  && !b[startRow - 1][column].isEmpty()) // Calculate the start row of perpinducular word
+            while (Square.doesExist(column, startRow-1)  && !b[startRow - 1][column].isEmpty()) // Calculate the start row of perpindicular word
                 startRow -= 1;
-            while (Square.doesExist(column, startRow+1)  && !b[startRow + 1][column].isEmpty()) // Calculate the end row of perpinducular word
+            while (Square.doesExist(column, startRow+1)  && !b[startRow + 1][column].isEmpty()) // Calculate the end row of perpindicular word
                 endRow += 1;
 
             // Add word score to score if there is an extra word

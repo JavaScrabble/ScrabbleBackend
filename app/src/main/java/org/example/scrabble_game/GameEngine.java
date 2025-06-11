@@ -1,22 +1,29 @@
 package org.example.scrabble_game;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 
 public class GameEngine {
     private boolean skippedBefore = false;
     private Board board;
     private TileBag tileBag;
+    private ArrayList<Player> allPlayers;
     private Player currentPlayer;
     private Queue<Player> turnQueue;
+    private UUID id;
+
 
     public GameEngine(List<String> nicks) {
+        this.id = java.util.UUID.randomUUID();;
+
         this.board = new Board();
         this.tileBag = new TileBag();
 
         List<Player> players = nicks.stream().map(e -> new Player(e, new Rack(tileBag))).toList();
-
+        this.allPlayers = new ArrayList<>(players);
         this.turnQueue = new LinkedList<>(players);
 
         for (Player p : players) {
@@ -76,5 +83,18 @@ public class GameEngine {
             scores += p.getName() + " " + p.getScore() + "|\t";
         }
         return scores;
+    }
+
+    public int getPlayerScore(String nickname) {
+        for (Player p : allPlayers) {
+            if (p.getName().equals(nickname)) {
+                return p.getScore();
+            }
+        }
+        return -1;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }
