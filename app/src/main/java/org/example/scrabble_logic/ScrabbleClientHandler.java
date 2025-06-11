@@ -196,8 +196,10 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                 "score": "%s"
             }""";
 
+        // zamiana ujemnych na dodatnie
+        String unsignedStr = Long.toUnsignedString(gameID.getLeastSignificantBits());
         // skrócenie gameID do 11 znaków
-        String gameIDshort = String.valueOf(gameID.getLeastSignificantBits()).substring(0, 11);
+        String gameIDshort = unsignedStr.length() > 11 ? unsignedStr.substring(0, 11) : unsignedStr;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8000/scores"))
