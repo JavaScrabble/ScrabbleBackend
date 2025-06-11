@@ -7,7 +7,6 @@ public class Move {
     int startCol;
     char direction; // H -- horizontal or V -- vertical
     String word;
-    //Map<Integer, Character> tilesFromRack; // Position → Letter placed
 
     // constructor
     /**

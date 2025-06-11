@@ -6,6 +6,10 @@ import org.example.scrabble_game.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -17,6 +21,7 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
     private static final Logger LOGGER = Logger.getLogger(ScrabbleClientHandler.class.getName());
     private static final Map<String, List<AbstractClientHandler>> scrabbleClients = new HashMap<>();
     private static final Map<String, GameEngine> games = new HashMap<>();
+    private static final HttpClient CLIENT_FOR_DB = HttpClient.newHttpClient();
 
     private final List<AbstractClientHandler> playersInRoom;
 
@@ -73,6 +78,8 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                         client.sendToClient("START");
                     }
 
+                    // Create initial records for the game
+
                     nextTurn(game);
                 }
 
@@ -94,10 +101,12 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
                         game.getCurrentPlayer().increaseScore(score);
                         String results = game.getScores();
 
+
                         for (AbstractClientHandler client : playersInRoom) {
                             client.sendToClient(text);
                             client.sendToClient("SCORES:\t" + results);
                         }
+
 
                         game.setSkippedBefore(false);
                         if (game.getCurrentPlayer().getRack().isEmpty()) {
@@ -158,8 +167,16 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
     private void gameOver(GameEngine game) throws IOException {
         for (AbstractClientHandler client : playersInRoom) {
             client.sendToClient("GAME_END " + game.getWinner().getName() + " WON");
+
+            // Save final scores to database
+            try {
+                insertFinalScore(game.getId(), client.getNickname(), game.getPlayerScore(client.getNickname()));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             client.closeSocket();
         }
+
 
         playersInRoom.clear();
         games.remove(roomID);
@@ -169,5 +186,25 @@ public class ScrabbleClientHandler extends AbstractClientHandler {
     public void sendToClient(Object msg) throws IOException {
         LOGGER.fine("Sending command to %s: %s".formatted(nickname, msg));
         super.sendToClient(msg);
+    }
+
+    private String insertFinalScore(UUID gameID, String user, int score) throws IOException, InterruptedException {
+        final String RECORD_FORM = """
+            {
+                "gameID": "%s",
+                "nick": "%s",
+                "score": "%s"
+            }""";
+
+        // skrócenie gameID do 11 znaków
+        String gameIDshort = String.valueOf(gameID.getLeastSignificantBits()).substring(0, 11);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8000/scores"))
+                .POST(HttpRequest.BodyPublishers.ofString(RECORD_FORM.formatted(gameIDshort, user, score)))
+                .build();
+        HttpResponse<String> resp = CLIENT_FOR_DB.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return resp.body();
     }
 }

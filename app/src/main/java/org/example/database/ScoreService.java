@@ -34,8 +34,8 @@ public class ScoreService {
             String nick = json.optString("nick");
             int wynik = json.optInt("score", -1);
 
-            if (idGry < 0 || wynik < 0 || nick.isEmpty()) {
-                sendResponse(exchange, 400, "Brakuje danych: idGry, nick lub wynik");
+            if (wynik < 0 || nick.isEmpty()) {
+                sendResponse(exchange, 400, "Brakuje danych: gameID, nick lub wynik");
                 return;
             }
 
